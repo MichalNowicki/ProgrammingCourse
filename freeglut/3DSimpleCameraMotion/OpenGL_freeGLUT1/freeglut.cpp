@@ -76,7 +76,7 @@ void mouseMovement(int x, int y) {
 		mouseLastY = y; //set lasty to the current y position
 
 		zrot += 0.2 * diffx; // rotate around Z
-		yrot += (float)0.2 * diffy; // rotate around Y
+		yrot += 0.2 * diffy; // rotate around Y
 	}
 }
 
@@ -92,18 +92,19 @@ void onMouseButton(int button, int state, int x, int y)
 	}
 }
 
-void DrawRectangle(double width, double height)
+void setModelRotationAndTranslation()
 {
-	glPushMatrix();
-
 	// Translation of model coordinate system
 	glTranslated(x, y, z);
-	
+
 	// Initial rotation of model coordinate system
 	glRotated(xrot, 1, 0, 0);
 	glRotated(yrot, 0, 1, 0);
 	glRotated(zrot, 0, 0, 1);
+}
 
+void drawAxesOfCoordinateSystem()
+{
 	// Drawing axes
 	GLUquadricObj *quadratic;
 	quadratic = gluNewQuadric();
@@ -127,19 +128,13 @@ void DrawRectangle(double width, double height)
 	glColor3d(0.0, 1.0, 0.0);
 	gluCylinder(quadratic, 0.1f, 0.1f, 2, 32, 32);
 	glPopMatrix();
+}
 
-	// Drawing cube at (1,1,1) with black color
+void drawCube(float x, float y, float z, float r, float g, float b, float size) {
 	glPushMatrix();
-	glTranslated(1.0, 1.0, 1.0);
-	glColor3d(0.0, 0.0, 0.0);
-	glutSolidCube(0.5);
-	glPopMatrix();
-
-	// Add your draw functions below 
-	// ...
-	// ...
-	// ...
-
+	glTranslated(x, y, z);
+	glColor3d(r, g, b);
+	glutSolidCube(size);
 	glPopMatrix();
 }
 
@@ -149,7 +144,17 @@ static void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix();
-	DrawRectangle(2.0, 1.0);
+	setModelRotationAndTranslation();
+	drawAxesOfCoordinateSystem();
+
+	// Drawing cube at (1,1,1) with black color (0.0, 0.0, 0.0) with size = 0.5
+	drawCube(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.5);
+
+	// Add your drawing functions below 
+	// ...
+	// ...
+	// ...
+
 	glPopMatrix();
 
 	glutSwapBuffers();
